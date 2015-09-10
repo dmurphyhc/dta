@@ -1,0 +1,27 @@
+<p>
+  <strong>Location:</strong><br>
+  <% x = 0 %>
+  <% while x < @item.location.size %>
+  	<div style="width:150px;display:inline-block;">Physical Location:</div><%= @item.location(x).physical_location[0] %><br>
+  	<div style="width:150px;display:inline-block;">URL:</div><%= @item.location(x).url[0] %><br>
+  	<div style="width:150px;display:inline-block;">Holding Simple</div>
+	<div style="margin-left:25px;">
+	<% y = 0 %>
+	<% while y < @item.location(x).holding_simple.size %>
+  		<div style="width:150px;display:inline-block;">Copy Information</div>
+		<div style="margin-left:25px;">
+		<% z = 0 %>
+  		<% while z < @item.location(x).holding_simple(y).copy_information.size %>
+  			<div style="width:150px;display:inline-block;">Sub Location:</div><%= @item.location(x).holding_simple(y).copy_information(z).sub_location[0] %><br>
+  			<div style="width:150px;display:inline-block;">Shelf Location:</div><%= @item.location(x).holding_simple(y).copy_information(z).shelf_locator[0] %><br>
+  			<div style="width:150px;display:inline-block;">Enumeration and Chronology:</div><%= @item.location(x).holding_simple(y).copy_information(z).enumeration_and_chronology[0] %><br>
+  			<% z += 1 %>
+  		<% end %>
+  		</div>
+		<% y += 1 %>
+	<% end %>
+	</div>
+  	<hr>
+  	<% x += 1 %>
+  <% end %>
+</p>

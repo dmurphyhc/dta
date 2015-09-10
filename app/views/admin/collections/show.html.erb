@@ -1,0 +1,12 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @institution.name %> - <%= @collection.name %></h1>
+
+<h3>Items</h3>
+
+
+<br>
+<%= link_to 'Add Item', new_admin_institution_collection_item_path(@institution, @collection) %>
+<br><br>
+<%= link_to 'Edit', edit_admin_institution_collection_path(@institution, @collection) %> |
+<%= link_to 'Back', [:admin, @institution] %>

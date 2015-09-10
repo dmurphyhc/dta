@@ -1,0 +1,27 @@
+<h1>Listing items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th width=500>Title</th>
+      <th width=50></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+  	<tr><td colspan=3>&nbsp;</td></tr>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= item.title_info(0).title[0] %></td>
+        <td><%= link_to 'Show', [:admin, item] %></td>
+        <td><%= link_to 'Remove', [:admin, item], method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+      <tr><td colspan=3>&nbsp;</td></tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Item', new_admin_item_path %>

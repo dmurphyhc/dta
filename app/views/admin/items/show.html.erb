@@ -1,0 +1,348 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+	<strong>Title info:</strong><br>
+	<% x = 0 %>
+	<% while x < @item.descMetadata.find_by_terms(:mods, :title_info).size %>
+		<div style="width:150px;display:inline-block;">Title:</div><%= @item.title_info(x).title[0] %><br>
+		<div style="width:150px;display:inline-block;">Sub Title:</div><%= @item.title_info(x).sub_title[0] %><br>
+		<div style="width:150px;display:inline-block;">Non Sort:</div><%= @item.title_info(x).non_sort[0] %><br>
+		<hr>
+		<% x += 1 %>
+	<% end %>
+</p>
+
+<% if @item.descMetadata.find_by_terms(:mods, :name).size > 0 %>
+	<p>
+		<strong>Name:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.descMetadata.find_by_terms(:mods, :name).size %>
+			<div style="width:150px;display:inline-block;">Name Part:</div><%= @item.name(x).name_part[0] %><br>
+			<div style="width:150px;display:inline-block;">Affiliation:</div><%= @item.name(x).affiliation[0] %><br>
+			<div style="width:150px;display:inline-block;">Role</div>
+			<div style="margin-left:25px;">
+				<% y = 0 %>
+				<% while y < @item.name(x).role.size %>
+					<div style="width:150px;display:inline-block;">Role Term:</div><%= @item.name(x).role(y).role_term[0] %><br>
+					<% y += 1 %>
+				<% end %>
+			</div>
+			<hr>
+			<% x += 1 %>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :type_of_resource).size > 0 %>
+	<p>
+		<strong>Type of Resource:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.type_of_resource.size %>
+			<div style="width:150px;display:inline-block;">Type of Resource:</div><%= @item.type_of_resource(x)[0] %><br>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :genre).size > 0 %>
+	<p>
+		<strong>Genre:</strong>
+		<% if @item.genre.size > 0 %>
+			<br>
+			<% x = 0 %>
+			<div style="width:150px;display:inline-block;vertical-align: top;">Genre:</div>
+			<div style="display:inline-block;width:800px;">
+				<% while x < @item.genre.size %>
+					<%= Genre.where(["value = ?", @item.genre(x)[0]]).first.display %>
+					<% x += 1 %>
+					<% if x < @item.genre.size %>
+						||
+					<% end %>
+				<% end %>
+			</div><hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :origin_info).size > 0 %>
+	<p>
+		<strong>Origin info:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.origin_info.size %>
+			<div style="width:150px;display:inline-block;">Place</div>
+			<div style="margin-left:25px;">
+				<div style="width:150px;display:inline-block;">Place Term:</div><%= @item.origin_info(x).place.place_term[0] %><br>
+			</div>
+			<div style="width:150px;display:inline-block;">Publisher:</div><%= @item.origin_info(x).publisher[0] %><br>
+			<div style="width:150px;display:inline-block;">Date Issued:</div><%= @item.origin_info(x).date_issued[0] %><br>
+			<div style="width:150px;display:inline-block;">Date Created:</div><%= @item.origin_info(x).date_created[0] %><br>
+			<div style="width:150px;display:inline-block;">Copyright Date:</div><%= @item.origin_info(x).copyright_date[0] %><br>
+			<% y = 0 %>
+			<div style="width:150px;display:inline-block;">Date Other:</div>
+			<% while y < @item.origin_info(x).date_other.size %>
+				<%= @item.descMetadata.term_values(:mods, :origin_info, :date_other)[y] %>
+				<% y += 1 %>
+				<% if y < @item.origin_info(x).date_other.size %>
+					||
+				<% end %>
+			<% end %><br>
+			<div style="width:150px;display:inline-block;">Edition:</div><%= @item.origin_info(x).edition[0] %><br>
+<%
+=begin
+			<div style="width:150px;display:inline-block;">Issuance:</div><%= @item.origin_info(x).issuance[0] %><%<br>
+			<div style="width:150px;display:inline-block;">Frequency:</div><%= @item.origin_info(x).frequency[0] %><%<br>
+=end
+%>
+			<hr>
+			<% x += 1 %>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :language).size > 0 %>
+	<p>
+		<strong>Language:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.language.size %>
+			<div style="width:150px;display:inline-block;">Language Term:</div><%= @item.language(x).language_term[0] %><br>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :physical_description).size > 0 %>
+	<p>
+		<strong>Physical description:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.physical_description.size %>
+			<div style="width:150px;display:inline-block;">Internet Media Type:</div><%= @item.physical_description(x).internet_media_type[0] %><br>
+			<div style="width:150px;display:inline-block;">Extent:</div><%= @item.physical_description(x).extent[0] %><br>
+			<div style="width:150px;display:inline-block;">Digital Origin:</div><%= @item.physical_description(x).digital_origin[0] %><br>
+			<div style="width:150px;display:inline-block;">Note:</div><%= @item.physical_description(x).note[0] %><br>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :abstract).size > 0 %>
+	<p>
+		<strong>Abstract:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.abstract.size %>
+			<div style="width:150px;display:inline-block;vertical-align: top;">Abstract:</div>
+			<div style="display:inline-block;"><%= raw(sanitize(simple_format(@item.abstract(x)[0]), tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style))) %></div>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :table_of_contents).size > 0 %>
+	<p>
+		<strong>Table of contents:</strong>
+		<% if @item.table_of_contents != nil %>
+			<br>
+			<div style="width:150px;display:inline-block;vertical-align: top;">Table of Contents:</div>
+			<div style="display:inline-block;"><%= raw(sanitize(simple_format(@item.table_of_contents), tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style))) %></div>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :note).size > 0 %>
+	<p>
+		<strong>Note:</strong>
+		<% x = 0 %>
+		<% if @item.descMetadata.find_by_terms(:mods, :general_note).size > 0 %>
+			<div style="width:150px;display:inline-block;vertical-align: top;">General:</div>
+			<div style="display:inline-block;"><%= raw(sanitize(simple_format(@item.descMetadata.term_values(:mods, :general_note)[0]), tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style))) %></div>
+			<hr>
+		<% end %>
+		<% if @item.descMetadata.find_by_terms(:mods, :preferred_citation).size > 0 %>
+			<div style="width:150px;display:inline-block;">Preferred Citation:</div><%= @item.descMetadata.term_values(:mods, :preferred_citation)[0] %><hr>
+		<% end %>
+		<% if @item.descMetadata.find_by_terms(:mods, :biographical).size > 0 %>
+			<div style="width:150px;display:inline-block;vertical-align: top;">Biographical:</div>
+			<div style="display:inline-block;"><%= raw(sanitize(simple_format(@item.descMetadata.term_values(:mods, :biographical)[0]), tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style))) %></div>
+			<hr>
+		<% end %>
+<%
+=begin
+		<% while x < @item.descMetadata.find_by_terms(:mods, :note).size %>
+			<% if @item.note(x).type_at[0] == nil %>
+<%
+				<div style="width:150px;display:inline-block;">Note:</div><%= @item.note(x)[0] %>
+			<% else %>
+<%
+				<div style="width:150px;display:inline-block;"><%= @item.note(x).type_at[0].split.map(&:capitalize).join(' ') %><%:</div><%= @item.note(x)[0] %>
+			<% end %>
+			<% x += 1 %>
+<%
+			<hr>
+		<% end %>
+<%
+=end
+%>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :subject).size > 0 %>
+	<p>
+		<strong>Subject:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.descMetadata.find_by_terms(:mods, :subject).size %>
+			<% y = 0 %>
+			<div style="width:150px;display:inline-block;">Topic:</div>
+			<% while y < @item.subject(x).topic.size %>
+				<%= @item.descMetadata.term_values(:mods, :subject, :topic)[y] %>
+				<% y += 1 %>
+				<% if y < @item.subject(x).topic.size %>
+					||
+				<% end %>
+			<% end %><br>
+			<% y = 0 %>
+			<div style="width:150px;display:inline-block;">Geographic:</div>
+			<% while y < @item.subject(x).geographic.size %>
+				<%= @item.descMetadata.term_values(:mods, :subject, :geographic)[y] %>
+				<% y += 1 %>
+				<% if y < @item.subject(x).geographic.size %>
+					||
+				<% end %>
+			<% end %><br>
+			<% y = 0 %>
+			<div style="width:150px;display:inline-block;">Temporal:</div>
+			<% while y < @item.subject(x).temporal.size %>
+				<%= @item.descMetadata.term_values(:mods, :subject, :temporal)[y] %>
+				<% y += 1 %>
+				<% if y < @item.subject(x).temporal.size %>
+					||
+				<% end %>
+			<% end %><br>
+<%
+=begin
+			<div style="width:150px;display:inline-block;">Title Info:</div><%= @item.subject(x).title_info[0] %><%<br>
+=end
+%>
+			<div style="width:150px;display:inline-block;">Name</div>
+			<div style="margin-left:25px;">
+				<% y = 0 %>
+				<% while y < @item.subject(x).name.size %>
+					<% if y > 0 %>
+						<hr style="margin-top:7px;margin-bottom:5px;">
+					<% end %>
+					<div style="width:150px;display:inline-block;">Name Part:</div><%= @item.subject(x).name(y).name_part[0] %><br>
+					<div style="width:150px;display:inline-block;">Affiliation:</div><%= @item.subject(x).name(y).affiliation[0] %><br>
+					<% y += 1 %>
+				<% end %>
+			</div>
+<%
+=begin
+			<div style="width:150px;display:inline-block;">Genre:</div><%= @item.subject(x).genre[0] %><%<br>
+=end
+%>
+			<hr>
+			<% x += 1 %>
+		<% end %>
+	</p>
+<% end %>
+
+<%
+=begin
+<p>
+	<strong>Identifier:</strong><br>
+	<% x = 0 %>
+<%
+	<% while x < @item.identifier.size %>
+<%
+		<div style="width:150px;display:inline-block;">Identifier:</div><%= @item.identifier(x)[0] %>
+<%<br>
+		<% x += 1 %>
+<%
+		<hr>
+	<% end %>
+<%
+</p>
+=end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :location).size > 0 %>
+	<p>
+		<strong>Location:</strong>
+		<% x = 0 %>
+		<% while x < @item.descMetadata.find_by_terms(:mods, :location).size %>
+			<div style="width:150px;display:inline-block;">Physical Location:</div><%= @item.location(x).physical_location[0] %><br>
+			<div style="width:150px;display:inline-block;">URL:</div><%= @item.location(x).url[0] %><br>
+			<div style="width:150px;display:inline-block;">Holding Simple</div>
+			<div style="margin-left:25px;">
+				<div style="width:150px;display:inline-block;">Copy Information</div>
+					<div style="margin-left:25px;">
+						<div style="width:210px;display:inline-block;">Sub Location:</div><%= @item.location(x).holding_simple(0).copy_information(0).sub_location[0] %><br>
+						<div style="width:210px;display:inline-block;">Shelf Locator:</div><%= @item.location(x).holding_simple(0).copy_information(0).shelf_locator[0] %><br>
+						<div style="width:210px;display:inline-block;">Enumeration And Chronology:</div><%= @item.location(x).holding_simple(0).copy_information(0).enumeration_and_chronology[0] %><br>
+					</div>
+				</div>
+			</div>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :access_condition).size > 0 %>
+	<p>
+		<strong>Access condition:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.descMetadata.find_by_terms(:mods, :access_condition).size %>
+			<div style="width:150px;display:inline-block;">Access Condition:</div><%= @item.access_condition(x)[0] %><br>
+			<% x += 1 %>
+			<hr>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :record_info).size > 0 %>
+	<p>
+		<strong>Record info:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.record_info.size %>
+			<div style="width:150px;display:inline-block;">Record Content Source:</div><%= @item.record_info(x).record_content_source[0] %><br>
+			<div style="width:150px;display:inline-block;">Record Origin:</div><%= @item.record_info(x).record_origin[0] %><br>
+			<div style="width:150px;display:inline-block;">Language of Cataloging</div>
+			<div style="margin-left:25px;">
+				<% y = 0 %>
+				<% while y < @item.record_info(x).language_of_cataloging.size %>
+						<div style="width:150px;display:inline-block;">Language Term:</div><%= @item.record_info(x).language_of_cataloging(y).language_term[0] %><br>
+					<% y += 1 %>
+				<% end %>
+			</div>
+			<div style="width:150px;display:inline-block;">Description Standard:</div><%= @item.record_info(x).description_standard[0] %><br>
+			<hr>
+			<% x += 1 %>
+		<% end %>
+	</p>
+<% end %>
+
+<% if @item.descMetadata.find_by_terms(:mods, :image).size > 0 %>
+	<p>
+		<strong>Image:</strong><br>
+		<% x = 0 %>
+		<% while x < @item.image.size %>
+			<div style="width:150px;display:inline-block;">Original Image Name:</div><%= @item.image(x).original_image[0] %><br>
+			<div style="width:150px;display:inline-block;">Full Image:</div><%= #image_tag(File.join('/uploads',  @item.id, @item.image(x).full_image[0])) 
+			%><br>
+			<div style="width:150px;display:inline-block;">Thumb Image:</div><%= #image_tag(File.join('/uploads',  @item.id, @item.image(x).thumb_image[0])) 
+			%><br>
+			<%= link_to 'Remove Image', remove_image_admin_items_path(@item.id, x), data: { confirm: 'Are you sure?' } %>
+			<hr>
+			<% x += 1 %>
+		<% end %>
+	</p>
+<% end %>
+
+
+<%= link_to 'Add Image', add_image_admin_items_path(@item) %><br><br>
+
+<%= link_to 'Back', admin_items_path %> | 
+<%= link_to 'Edit', edit_admin_item_path(@item) %>

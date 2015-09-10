@@ -1,0 +1,25 @@
+// Place all the styles related to the Items controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+fieldset label {
+  padding-left: 10px;
+}
+
+fieldset .field {
+	padding-left: 10px;
+}
+
+fieldset {
+	border-bottom: 1px solid #e5e5e5;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+fieldset .subelement {
+	padding-left:20px;
+}
+
+legend {
+	color: #808080;
+}

@@ -1,0 +1,489 @@
+<%= form_for [:admin, @institution, @collection, @item] do |f| %>
+  <% if @item.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@item.errors.count, "error") %> prohibited this item from being saved:</h2>
+
+      <ul>
+      <% @item.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+	<%= field_set_tag ('<span>Title Info' +
+											link_to(image_tag("add.png"), "", :id=>"add_title", :class=>"legend_mod_button") +
+											link_to(image_tag("remove.png"), "", :id=>"remove_title", :class=>"legend_mod_button") + '</span>').html_safe, :class=>"fieldset" do %>
+		<div class="child_group" id="title_info">
+			<% if @item.title_info.size > 0 %>
+				<% x = 0 %>
+				<% while x < @item.title_info.size %>
+					<% if x == 0 and @item.title_info.size > 1 %>
+						<div id="title_wrap" class="title_wrap">
+					<% elsif x > 0 %>
+						<div id="title_wrap" class="title_wrap title_addition">
+					<% else %>
+						<div id="title_wrap">
+					<% end %>
+						<%= f.label :title %>
+						<div class="field">
+							<%= text_field_tag "item[title_info][][title]", @item.title_info(x).title, :style => "width:600px;" %>
+						</div>
+						<%= f.label :subtitle %>
+						<div class="field">
+							<%= text_field_tag "item[title_info][][sub_title]", @item.title_info(x).sub_title, :style => "width:600px;" %>
+						</div>
+						<%= f.label :nonsort %>
+						<div class="field">
+							<%= text_field_tag "item[title_info][][non_sort]", @item.title_info(x).non_sort, :style => "width:600px;" %>
+						</div>
+						<% x += 1 %>
+					</div>
+				<% end %>
+				<% x = @item.title_info.size %>
+			<% else %>
+				<div id="title_wrap">
+					<%= f.label :title %>
+					<div class="field">
+						<%= text_field_tag "item[title_info][][title]", nil, :style => "width:600px;" %>
+					</div>
+					<%= f.label :sub_title %>
+					<div class="field">
+						<%= text_field_tag "item[title_info][][sub_title]", nil, :style => "width:600px;" %>
+					</div>
+					<%= f.label :non_sort %>
+					<div class="field">
+						<%= text_field_tag "item[title_info][][non_sort]", nil, :style => "width:600px;" %>
+					</div>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+
+  <%= field_set_tag 'Name', :class=>"fieldset" do %>
+  	<div class="child_group">
+				<%= f.label :name_part %>
+				<div class="field" id="name_part">
+					<% x = 0 %>
+					<% if @item.descMetadata.find_by_terms(:mods, :name, :name_part).size > 0 %>
+						<% while x < @item.descMetadata.find_by_terms(:mods, :name, :name_part).size %>
+							<% if x == 0 %>
+								<%= text_field_tag "item[name][][name_part][]", @item.name(0).name_part[x], :style => "width:600px;" %>
+								<%= link_to image_tag("add.png"), "", :id=>"add_name_part", :class=>"mod_button" %>
+								<%= link_to image_tag("remove.png"), "", :id=>"remove_name_part", :class=>"mod_button" %>
+							<% else %>
+								<%= text_field_tag "item[name][][name_part][]", @item.name(0).name_part[x], {:style => "width:600px;", :class => "name_part_addition field_addition"} %>
+							<% end %>
+							<% x += 1 %>
+						<% end %>
+					<% else %>
+						<%= text_field_tag "item[name][][name_part][]", nil, :style => "width:600px;" %>
+						<%= link_to image_tag("add.png"), "", :id=>"add_name_part", :class=>"mod_button" %>
+						<%= link_to image_tag("remove.png"), "", :id=>"remove_name_part", :class=>"mod_button" %>
+					<% end %>
+				</div>
+				<%= f.label :affiliation %>
+				<div class="field">
+					<%= text_field_tag "item[name][][affiliation]", @item.name(0).affiliation[0], :style => "width:600px;" %>
+				</div>
+				<%= field_set_tag 'Role', :class=>"fieldset" do %>
+					<div class="child_group">
+						<%= f.label :role_term %>
+						<div class="field">
+							<%= text_field_tag "item[name][][role][][role_term]", @item.name(0).role(0).role_term[0], :style => "width:600px;" %>
+						</div>
+					</div>
+				<% end %>
+
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Type of Resource', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :type_of_resource %>
+			<div class="field">
+				<%= select_tag 'item[type_of_resource][]', options_from_collection_for_select(Resource.all, :value, :display, @item.type_of_resource(0)[0]), {include_blank: true, :style => "width:300px;"} %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Genre', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :genre %>
+			<div class="field" id="genre">
+				<% if @item.genre.size > 0 %>
+					<% x = 0 %>
+					<% while x < @item.genre.size %>
+						<% if x == 0 %>
+							<%= select_tag 'item[genre][]', options_from_collection_for_select(Genre.all, :value, :display, @item.genre(x)[0]), {include_blank: true, :style => "width:300px;"} %>
+							<%= link_to image_tag("add.png"), "", :id=>"add_genre", :class=>"mod_button" %>
+							<%= link_to image_tag("remove.png"), "", :id=>"remove_genre", :class=>"mod_button" %>
+						<% else %>
+							<%= select_tag 'item[genre][]', options_from_collection_for_select(Genre.all, :value, :display, @item.genre(x)[0]), {include_blank: true, :style => "width:300px;", :class => "genre_addition field_addition"} %>
+						<% end %>
+						<% x += 1 %>
+					<% end %>
+				<% else %>
+					<%= select_tag 'item[genre][]', options_from_collection_for_select(Genre.all, :value, :display), {include_blank: true, :style => "width:300px;"} %>
+					<%= link_to image_tag("add.png"), "", :id=>"add_genre", :class=>"mod_button" %>
+					<%= link_to image_tag("remove.png"), "", :id=>"remove_genre", :class=>"mod_button" %>
+				<% end %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Origin Info', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= field_set_tag 'Place', :class=>"fieldset" do %>
+				<div class="child_group">
+					<%= f.label :place_term %>
+					<div class="field">
+						<%= text_field_tag "item[origin_info][][place][place_term]", @item.origin_info(0).place.place_term[0], :style => "width:600px;" %>
+					</div>
+				</div>
+			<% end %>
+			<%= f.label :publisher %>
+			<div class="field">
+				<%= text_field_tag "item[origin_info][][publisher]", @item.origin_info(0).publisher[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :date_issued %>
+			<div class="field">
+				<%= text_field_tag "item[origin_info][][date_issued]", @item.origin_info(0).date_issued[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :date_created %>
+			<div class="field">
+				<%= text_field_tag "item[origin_info][][date_created]", @item.origin_info(0).date_created[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :copyright_date %>
+			<div class="field">
+				<%= text_field_tag "item[origin_info][][copyright_date]", @item.origin_info(0).copyright_date[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :date_other %>
+			<div class="field" id="date_other">
+				<% if @item.origin_info(0).date_other.size > 0 %>
+					<% x = 0 %>
+					<% while x < @item.origin_info(0).date_other.size %>
+						<% if x == 0 %>
+							<%= text_field_tag "item[origin_info][][date_other][]", @item.origin_info(0).date_other(x), :style => "width:600px;" %>
+							<%= link_to image_tag("add.png"), "", :id=>"add_date_other", :class=>"mod_button" %>
+							<%= link_to image_tag("remove.png"), "", :id=>"remove_date_other", :class=>"mod_button" %>
+						<% else %>
+							<%= text_field_tag "item[origin_info][][date_other][]", @item.origin_info(0).date_other(x), {:style => "width:600px;", :class => "topic_addition field_addition"} %>
+						<% end %>
+						<% x += 1 %>
+					<% end %>
+				<% else %>
+					<%= text_field_tag "item[origin_info][][date_other][]", nil, :style => "width:600px;" %>
+					<%= link_to image_tag("add.png"), "", :id=>"add_date_other", :class=>"mod_button" %>
+					<%= link_to image_tag("remove.png"), "", :id=>"remove_date_other", :class=>"mod_button" %>
+				<% end %>
+			</div>
+			<%= f.label :edition %>
+			<div class="field">
+				<%= text_field_tag "item[origin_info][][edition]", @item.origin_info(0).edition[0], :style => "width:600px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Language', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :language_term %>
+			<div class="field">
+				<%= text_field_tag "item[language][][language_term]", @item.language(0).language_term[0], :style => "width:600px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Physical Description', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :internet_media_type %>
+			<div class="field">
+				<%= text_field_tag "item[physical_description][][internet_media_type]", @item.physical_description(0).internet_media_type[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :extent %>
+			<div class="field">
+				<%= text_field_tag "item[physical_description][][extent]", @item.physical_description(0).extent[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :digital_origin %>
+			<div class="field">
+				<%= text_field_tag "item[physical_description][][digital_origin]", @item.physical_description(0).digital_origin[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :note %>
+			<div class="field">
+				<%= text_field_tag "item[physical_description][][note]", @item.physical_description(0).note[0], :style => "width:600px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Abstract', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :abstract %>
+			<div class="field">
+				<%= text_area_tag "item[abstract][]", @item.abstract(0)[0], :style => "width:600px;height:150px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Table of Contents', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :table_of_contents %>
+			<div class="field">
+				<%= text_area_tag "item[table_of_contents]", @item.table_of_contents(0), :style => "width:600px;height:150px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Note', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :general_note %>
+			<div class="field">
+				<%= text_area_tag "item[general_note]", @item.descMetadata.term_values(:mods, :general_note)[0], :style => "width:600px;height:150px;" %>
+			</div>
+			<%= f.label :preferred_citation %>
+			<div class="field">
+				<%= text_field_tag "item[citation]", @item.descMetadata.term_values(:mods, :preferred_citation)[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :biographical %>
+			<div class="field">
+				<%= text_area_tag "item[biographical]", @item.descMetadata.term_values(:mods, :biographical)[0], :style => "width:600px;height:150px;" %>
+			</div>
+<%
+=begin
+			<%= field_set_tag ('<span>Note' +
+													link_to(image_tag("add.png"), "", :id=>"add_note", :class=>"legend_mod_button") +
+													link_to(image_tag("remove.png"), "", :id=>"remove_note", :class=>"legend_mod_button") + '</span>').html_safe, :class=>"fieldset" do %>
+<%
+				<div class="child_group" id="note">
+					<div id="note_wrap">
+						<%= f.label :note %>
+<%
+						<div class="field">
+							<%= text_field_tag "item[note][]", nil, :style => "width:600px;" %>
+<%
+						</div>
+						<%= f.label :type %>
+<%
+						<div class="field">
+							<%= text_field_tag "item[note_type][]", nil, :style => "width:600px;" %>
+<%
+						</div>
+					</div>
+				</div>
+			<% end %>
+<%
+=end
+%>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Subject', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :topic %>
+			<div class="field" id="topic">
+				<% if @item.subject(0).topic.size > 0 %>
+					<% x = 0 %>
+					<% while x < @item.subject(0).topic.size %>
+						<% if x == 0 %>
+							<%= text_field_tag "item[subject][][topic][]", @item.subject(0).topic(x), :style => "width:600px;" %>
+							<%= link_to image_tag("add.png"), "", :id=>"add_topic", :class=>"mod_button" %>
+							<%= link_to image_tag("remove.png"), "", :id=>"remove_topic", :class=>"mod_button" %>
+						<% else %>
+							<%= text_field_tag "item[subject][][topic][]", @item.subject(0).topic(x), {:style => "width:600px;", :class => "topic_addition field_addition"} %>
+						<% end %>
+						<% x += 1 %>
+					<% end %>
+				<% else %>
+					<%= text_field_tag "item[subject][][topic][]", nil, :style => "width:600px;" %>
+					<%= link_to image_tag("add.png"), "", :id=>"add_topic", :class=>"mod_button" %>
+					<%= link_to image_tag("remove.png"), "", :id=>"remove_topic", :class=>"mod_button" %>
+				<% end %>
+			</div>
+			
+			<%= f.label :geographic %>
+			<div class="field" id="geographic">
+				<% if @item.subject(0).geographic.size > 0 %>
+					<% x = 0 %>
+					<% while x < @item.subject(0).geographic.size %>
+						<% if x == 0 %>
+							<%= text_field_tag "item[subject][][geographic][]", @item.subject(0).geographic(x), :style => "width:600px;" %>
+							<%= link_to image_tag("add.png"), "", :id=>"add_geographic", :class=>"mod_button" %>
+							<%= link_to image_tag("remove.png"), "", :id=>"remove_geographic", :class=>"mod_button" %>
+						<% else %>
+							<%= text_field_tag "item[subject][][geographic][]", @item.subject(0).geographic(x), {:style => "width:600px;", :class => "geographic_addition field_addition"} %>
+						<% end %>
+						<% x += 1 %>
+					<% end %>
+				<% else %>
+					<%= text_field_tag "item[subject][][geographic][]", nil, :style => "width:600px;" %>
+					<%= link_to image_tag("add.png"), "", :id=>"add_geographic", :class=>"mod_button" %>
+					<%= link_to image_tag("remove.png"), "", :id=>"remove_geographic", :class=>"mod_button" %>
+				<% end %>
+			</div>
+			<%= f.label :temporal %>
+			<div class="field" id="temporal">
+				<% if @item.subject(0).temporal.size > 0 %>
+					<% x = 0 %>
+					<% while x < @item.subject(0).temporal.size %>
+						<% if x == 0 %>
+							<%= text_field_tag "item[subject][][temporal][]", @item.subject(0).temporal(x), :style => "width:600px;" %>
+							<%= link_to image_tag("add.png"), "", :id=>"add_temporal", :class=>"mod_button" %>
+							<%= link_to image_tag("remove.png"), "", :id=>"remove_temporal", :class=>"mod_button" %>
+						<% else %>
+							<%= text_field_tag "item[subject][][temporal][]", @item.subject(0).temporal(x), {:style => "width:600px;", :class => "temporal_addition field_addition"} %>
+						<% end %>
+						<% x += 1 %>
+					<% end %>
+				<% else %>
+					<%= text_field_tag "item[subject][][temporal][]", nil, :style => "width:600px;" %>
+					<%= link_to image_tag("add.png"), "", :id=>"add_temporal", :class=>"mod_button" %>
+					<%= link_to image_tag("remove.png"), "", :id=>"remove_temporal", :class=>"mod_button" %>
+				<% end %>
+			</div>
+<%
+=begin
+			<%= f.label :title_info %>
+<%
+			<div class="field">
+				<%= text_field_tag "item[subject][][title_info]", nil, :style => "width:600px;" %>
+<%
+			</div>
+=end
+%>
+			<%= #field_set_tag 'Name', :class=>"fieldset" do
+			%>
+			<%= field_set_tag ('<span>Name' +
+											link_to(image_tag("add.png"), "", :id=>"add_subject_name", :class=>"legend_mod_button") +
+											link_to(image_tag("remove.png"), "", :id=>"remove_subject_name", :class=>"legend_mod_button") + '</span>').html_safe, :class=>"fieldset" do %>
+				<div id="subject_name" class="child_group">
+					<% if @item.subject(0).name.size > 0 %>
+						<% x = 0 %>
+						<% while x < @item.subject(0).name.size %>
+							<% if x == 0 and @item.subject(0).name.size > 1 %>
+								<div id="subject_name_wrap" class="subject_name_wrap">
+							<% elsif x > 0 %>
+								<div id="subject_name_wrap" class="subject_name_wrap subject_name_addition">
+							<% else %>
+								<div id="subject_name_wrap">
+							<% end %>
+								<%= f.label :name_part %>
+								<div class="field">
+									<%= text_field_tag "item[subject][][name][][name_part]", @item.subject(0).name(x).name_part[0], :style => "width:600px;" %>
+								</div>
+								<%= f.label :affiliation %>
+								<div class="field">
+									<%= text_field_tag "item[subject][][name][][affiliation]", @item.subject(0).name(x).affiliation[0], :style => "width:600px;" %>
+								</div>
+							</div>
+							<% x += 1 %>
+						<% end %>
+					<% else %>
+						<div id="subject_name_wrap">
+							<%= f.label :name_part %>
+							<div class="field">
+								<%= text_field_tag "item[subject][][name][][name_part]", nil, :style => "width:600px;" %>
+							</div>
+							<%= f.label :affiliation %>
+							<div class="field">
+								<%= text_field_tag "item[subject][][name][][affiliation]", nil, :style => "width:600px;" %>
+							</div>
+						</div>
+					<% end %>
+				</div>
+
+			<% end %>
+		</div>
+	<% end %>
+	
+<%
+=begin
+	<%= field_set_tag 'Identifier - This will go away', :class=>"fieldset" do %>
+<%
+		<div class="child_group">
+			<%= f.label :identifier %>
+<%
+			<div class="field">
+				<%= text_field_tag "item[identifier][]", nil, :style => "width:600px;" %>
+<%
+			</div>
+		</div>
+	<% end %>
+<%
+=end
+%>
+	
+	<%= field_set_tag 'Location', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :physical_location %>
+			<div class="field">
+				<%= text_field_tag "item[location][][physical_location]", @item.location(0).physical_location[0], :style => "width:600px;" %>
+<%
+=begin
+				<%=h Institution.find(params[:institution_id]).name
+=end				
+%>
+			</div>
+			<%= f.label :url %>
+			<div class="field">
+				<%= text_field_tag "item[location][][url]", @item.location(0).url[0], :style => "width:600px;" %>
+			</div>
+			<%= field_set_tag 'Holding Simple', :class=>"fieldset" do %>
+				<div class="child_group">
+					<%= field_set_tag 'Copy Information', :class=>"fieldset" do %>
+						<div class="child_group">
+							<%= f.label :sub_location %>
+							<div class="field">
+								<%= text_field_tag "item[location][][holding_simple][][copy_information][][sub_location]", @item.location(0).holding_simple(0).copy_information(0).sub_location[0], :style => "width:600px;" %>
+							</div>
+							<%= f.label :shelf_locator %>
+							<div class="field">
+								<%= text_field_tag "item[location][][holding_simple][][copy_information][][shelf_locator]", @item.location(0).holding_simple(0).copy_information(0).shelf_locator[0], :style => "width:600px;" %>
+							</div>
+							<%= f.label :enumeration_and_chronology %>
+							<div class="field">
+								<%= text_field_tag "item[location][][holding_simple][][copy_information][][enumeration_and_chronology]", @item.location(0).holding_simple(0).copy_information(0).enumeration_and_chronology[0], :style => "width:600px;" %>
+							</div>
+						</div>
+					<% end %>
+				</div>
+			<% end %>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Access Condition', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :access_condition %>
+			<div class="field">
+				<%= text_field_tag "item[access_condition][]", @item.access_condition(0)[0], :style => "width:600px;" %>
+			</div>
+		</div>
+	<% end %>
+	
+	<%= field_set_tag 'Record Info', :class=>"fieldset" do %>
+		<div class="child_group">
+			<%= f.label :record_content_source %>
+			<div class="field">
+				<%= text_field_tag "item[record_info][][record_content_source]", @item.record_info(0).record_content_source[0], :style => "width:600px;" %>
+			</div>
+			<%= f.label :record_origin %>
+			<div class="field">
+				<%= text_field_tag "item[record_info][][record_origin]", @item.record_info(0).record_origin[0], :style => "width:600px;" %>
+			</div>
+			<%= field_set_tag 'Language Of Cataloging', :class=>"fieldset" do %>
+				<div class="child_group">
+					<%= f.label :language_term %>
+					<div class="field">
+						<%= text_field_tag "item[record_info][][language_of_cataloging][][language_term]", @item.record_info(0).language_of_cataloging(0).language_term[0], :style => "width:600px;" %>
+					</div>
+				</div>
+			<% end %>
+			<%= f.label :description_standard %>
+			<div class="field">
+				<%= text_field_tag "item[record_info][][description_standard]", @item.record_info(0).description_standard[0], :style => "width:600px;" %>
+			</div>
+		</div>
+	<% end %>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

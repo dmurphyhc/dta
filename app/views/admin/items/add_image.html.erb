@@ -1,0 +1,7 @@
+<h1>Add Image</h1>
+
+<%= form_for(@item, :url => save_image_admin_items_path(@item)) do |f| %>
+	<%= f.file_field :image, multiple: :true, accept: 'image/png,image/gif,image/jpeg,image/jp2,image/tiff' %>
+	<br>
+	<%= f.submit :Submit %>
+<% end %>

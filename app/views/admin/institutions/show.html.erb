@@ -1,0 +1,37 @@
+<p id="notice"><%= notice %></p>
+
+<h1><%= @institution.name %></h1>
+
+<h4>Information</h4>
+<div style="border:1px solid #c1c1c1;padding:10px;width:600px;border-radius:3px;margin-bottom:20px;">
+	<%= raw(sanitize(simple_format(@institution.info, tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style)))) %>
+</div>
+
+<div style="margin-bottom:20px;"><span style="font-size: 18px;">Link:</span> <%= @institution.url %></div>
+
+<h4>Address</h4>
+<div style="border:1px solid #c1c1c1;padding:10px;width:400px;border-radius:3px;margin-bottom:20px;">
+	<%= raw(sanitize(simple_format(@institution.address, tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style)))) %>
+</div>
+
+<h4>Contact</h4>
+<div style="border:1px solid #c1c1c1;padding:10px;width:400px;border-radius:3px;margin-bottom:20px;">
+	<%= raw(sanitize(simple_format(@institution.contact, tags: %w(p b strong i em ol ul li span br), attributes: %w(id class style)))) %>
+</div>
+
+<hr>
+
+<h3>Collections</h3>
+<div style="border:1px solid #c1c1c1;padding:10px;width:600px;border-radius:3px;margin-bottom:20px;">
+	<% @institution.collections.each do |collection| %>
+		<h5><%= link_to collection.name, admin_institution_collection_path(@institution.id, collection) %></h5>
+	<% end %>
+</div>
+
+<hr>
+
+<br>
+<%= link_to 'Add Collection', new_admin_institution_collection_path(@institution.id) %>
+<br><br>
+<%= link_to 'Edit', edit_admin_institution_path(@institution) %> |
+<%= link_to 'Back', admin_institutions_path %>
